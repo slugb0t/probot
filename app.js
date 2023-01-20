@@ -2,11 +2,16 @@
  * @param {import('probot').Probot} app
  */
 module.exports = (app) => {
-  app.log("Yay! The app was loaded!");
+  app.log("Yay! The app was loaded!")
 
-  app.on("issues.opened", async (context) => {
-    return context.octokit.issues.createComment(
-      context.issue({ body: "Hello, World!" })
-    );
+  app.onAny(async (context) => {
+    app.log.info({ event: context.name, action: context.payload });
+    context.webhook({
+      event: context.name,
+      data: {
+        message: context.payload
+      }
+    })
   });
+
 };
