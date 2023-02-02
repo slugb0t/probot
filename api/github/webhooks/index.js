@@ -1,16 +1,10 @@
-const { Server, Probot } = require("probot");
+const { createNodeMiddleware, createProbot } = require("probot");
+
 const app = require("../../../app");
 
-async function startServer() {
-  const server = new Server({
-    Probot: Probot.defaults({
-      appId: 123,
-      privateKey: "content of your *.pem file here",
-      secret: "webhooksecret123",
-    }),
-  });
+const probot = createProbot();
 
-  await server.load(app);
-
-  server.start();
-}
+module.exports = createNodeMiddleware(app, {
+  probot,
+  webhooksPath: "/api/github/webhooks",
+});
